@@ -1,12 +1,13 @@
-def call(String dockerAccountName, String repoName, String dockerHubCredentialId, String dockerHubPasswordVariableName) {
-  sh "docker build -t ${dockerAcccountName}/${repoName}:${env.BUILD_ID} ."
-  sh "docker tag ${dockerAcccountName}/${repoName}:${env.BUILD_ID} ${dockerAcccountName}/${repoName}:latest"
-  withCredentials([string(credentialsId: '${dockerHubCredentialId}', variable: '${dockerHubPasswordVariableName}')]) {
-    sh "docker login -u ${dockerAcccountName} -p ${DOCKER_HUB_PASSWORD} docker.io"
-  }
-  sh "docker push ${dockerAcccountName}/${repoName}:${env.BUILD_ID}"
-  sh "docker push ${dockerAcccountName}/${repoName}:latest"
-  sh 'docker logout docker.io'
-  sh "docker image rm  ${dockerAcccountName}/${repoName}:${env.BUILD_ID}"
-  sh "docker image rm  ${dockerAcccountName}/${repoName}:latest"
+def call() {
+	sh "docker build -t rathinamtrainers/myjavaapp:${env.BUILD_ID} ."
+	sh "docker tag rathinamtrainers/myjavaapp:${env.BUILD_ID} rathinamtrainers/myjavaapp:latest"
+	withCredentials([string(credentialsId: 'DOCKER_HUB_CREDENTIALS', variable: 'DOCKER_HUB_PASSWORD')]) {
+	    sh "docker login -u rathinamtrainers -p ${DOCKER_HUB_PASSWORD} docker.io"
+	}
+	sh "docker push rathinamtrainers/myjavaapp:${env.BUILD_ID}"
+	sh "docker push rathinamtrainers/myjavaapp:latest"
+	sh 'docker logout docker.io'
+	sh "docker image rm  rathinamtrainers/myjavaapp:${env.BUILD_ID}"
+	sh "docker image rm  rathinamtrainers/myjavaapp:latest"
 }
+
